@@ -9,9 +9,10 @@ import {
 } from "react-simple-maps";
 import ReactTooltip from "react-tooltip";
 import BodyStyle from "../../style/css/body.module.css";
+import GeoData from "../../data/feature.json";
+import MapModal from "../../items/madal";
 
-const geoUrl =
-  "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
+const geoUrl: object = GeoData;
 
 interface MapPosition {
   coordinates: [number, number];
@@ -26,6 +27,7 @@ interface MapMarker {
 }
 
 type Content = string;
+type Selected = string;
 
 const markers: Array<MapMarker> = [
   {
@@ -51,6 +53,7 @@ function Tworld() {
     coordinates: [0, 0],
     zoom: 1,
   });
+  const [selected, setSelected] = useState<Selected>("");
 
   function handleZoomIn() {
     if (position.zoom >= 4) return;
@@ -102,45 +105,59 @@ function Tworld() {
             zoom={position.zoom}
             center={position.coordinates}
             onMoveEnd={handleMoveEnd}
-            style={{ transition: "1s" }}
+            style={{ transition: "0.5s" }}
           >
             <Geographies geography={geoUrl}>
               {({ geographies }) =>
                 geographies.map((geo) => (
                   <Geography
+                    className={geo.properties.name}
                     key={geo.rsmKey}
                     geography={geo}
                     onMouseEnter={() => {
-                      const { NAME } = geo.properties;
-                      setContent(`${NAME}`);
+                      const { name } = geo.properties;
+                      setContent(`${name}`);
                     }}
                     onMouseLeave={() => {
                       setContent("");
                     }}
                     style={{
-                      default: { outline: "none" },
+                      default: {
+                        fill:
+                          (selected === geo.properties.name && "#F53") ||
+                          "#64829c",
+                        outline: "none",
+                      },
                       hover: {
                         fill: "#F53",
                         outline: "none",
                       },
                       pressed: { outline: "none" },
                     }}
-                    onClick={() => {
-                      const name = geo.properties.NAME;
-                      console.log(name);
+                    onClick={(e) => {
+                      const name = geo.properties.name;
+                      setSelected(name);
+                      let it = Array.from(
+                        document.getElementsByClassName(
+                          name
+                        ) as HTMLCollectionOf<HTMLElement>
+                      );
 
                       if (name === "South Korea") {
                         setPosition({
                           coordinates: [127.024612, 37.5326],
                           zoom: 3,
                         });
-                      } else if (name === "United States of America") {
+                      } else if (name === "United States") {
                         setPosition({
-                          coordinates: [-74.006, 40.7128],
+                          coordinates: [-90.006, 40.7128],
                           zoom: 3,
                         });
-                      } else {
-                        setPosition((pos) => ({ ...pos, zoom: 3 }));
+                      } else if (name === "Brazil") {
+                        setPosition({
+                          coordinates: [-46.6252, -11.5337],
+                          zoom: 3,
+                        });
                       }
                     }}
                   />
@@ -161,7 +178,7 @@ function Tworld() {
                 </Marker>
               );
             })}
-            <Annotation
+            {/* <Annotation
               subject={[2.3522, 48.8566]}
               dx={-90}
               dy={-30}
@@ -179,10 +196,11 @@ function Tworld() {
               >
                 Paris
               </text>
-            </Annotation>
+            </Annotation> */}
           </ZoomableGroup>
         </ComposableMap>
       </div>
+      <MapModal color="red">text</MapModal>
     </React.Fragment>
   );
 }

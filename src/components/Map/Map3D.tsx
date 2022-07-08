@@ -51,20 +51,23 @@ const Map3D = ({ center }: MapPosition) => (
               fill="transparent"
               stroke="#CFD8DC"
             />
-            <Geographies disableOptimization geography={geoUrl}>
+            {/* <Geographies disableOptimization geography={geoUrl}>
               {(geos, proj) =>
-                geos.map((geo, i) => (
-                  <Geography
-                    key={geo.id + i}
-                    geography={geo}
-                    projection={proj}
-                    style={{
-                      default: { fill: "#CFD8DC" },
-                    }}
-                  />
-                ))
+                geos.map((geo, i) => {
+                  console.log(geo);
+                  return (
+                    <Geography
+                      key={geo.id + i}
+                      geography={geo}
+                      projection={proj}
+                      style={{
+                        default: { fill: "#CFD8DC" },
+                      }}
+                    />
+                  );
+                })
               }
-            </Geographies>
+            </Geographies> */}
           </ZoomableGroup>
         </ComposableMap>
       )}
