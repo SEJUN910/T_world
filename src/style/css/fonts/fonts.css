@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "ubuntu";
+  font-display: fallback;
+  src: url("./Ubuntu-Regular.ttf") format("truetype"),
+    url("./Ubuntu-Regular.woff") format("woff"),
+    url("./Ubuntu-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
