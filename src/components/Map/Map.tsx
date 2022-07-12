@@ -54,6 +54,7 @@ function Tworld() {
     zoom: 1,
   });
   const [selected, setSelected] = useState<Selected>("");
+  const [openModal, setOpenModal] = useState(false);
 
   function handleZoomIn() {
     if (position.zoom >= 4) return;
@@ -68,6 +69,13 @@ function Tworld() {
   function handleMoveEnd(position: MapPosition) {
     setPosition(position);
   }
+  const modalOpen = () => {
+    setOpenModal(true);
+  };
+
+  const modalClose = () => {
+    setOpenModal(false);
+  };
 
   return (
     <React.Fragment>
@@ -200,7 +208,9 @@ function Tworld() {
           </ZoomableGroup>
         </ComposableMap>
       </div>
-      <MapModal color="red">text</MapModal>
+      <MapModal open={modalOpen} close={modalClose} header="Modal heading">
+        text
+      </MapModal>
     </React.Fragment>
   );
 }

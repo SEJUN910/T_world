@@ -1,11 +1,13 @@
-import React, { Children } from "react";
+import React, { PropsWithChildren } from "react";
 import styled from "styled-components";
 import { theme } from "../style/css/theme";
 import { ThemeProvider } from "styled-components";
 
 interface Modals {
   children: React.ReactNode;
-  color: string;
+  header: string;
+  open: () => void;
+  close: () => void;
 }
 
 const Modal = styled.div`
@@ -92,10 +94,26 @@ const Modal = styled.div`
   }
 `;
 
-const MapModal = ({ children, color }: Modals) => {
+const MapModal = (props: PropsWithChildren<Modals>) => {
+  const { open, close, header } = props;
   return (
     <ThemeProvider theme={theme}>
-      <Modal>{children}</Modal>
+      <Modal className="modal">
+        <section>
+          <header>
+            {header}
+            <button type="button" className="close" onClick={close}>
+              &times;
+            </button>
+          </header>
+          <main>{props.children}</main>
+          <footer>
+            <button type="button" className="close" onClick={close}>
+              close
+            </button>
+          </footer>
+        </section>
+      </Modal>
     </ThemeProvider>
   );
 };
