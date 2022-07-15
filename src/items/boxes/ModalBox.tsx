@@ -2,6 +2,7 @@ import styled from "styled-components";
 import "../../style/css/fonts/fonts.css";
 import { grayColor } from "../../style/css/ColorLists";
 import CloseIcon from "../img/CloseIcon.svg";
+import CloseIconWhite from "../img/CloseIconWhite.svg";
 
 export const Modal = styled.div`
   position: fixed;
@@ -57,7 +58,7 @@ export const ModalCloseButton = styled.button`
   position: absolute;
   cursor: pointer;
   background: none;
-  right: 25%;
+  right: 22%;
   border: none;
   background: none;
   background-image: url(${CloseIcon});
@@ -96,7 +97,7 @@ export const ModalCloseReligionButton = styled.button`
   border: none;
   color: white;
   background: none;
-  background-image: url(${CloseIcon});
+  background-image: url(${CloseIconWhite});
   background-size: 40px;
   width: 40px;
   height: 40px;

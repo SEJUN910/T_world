@@ -7,12 +7,12 @@ import UnitedStates from "../components/countries/UnitedStates";
 
 interface Modals {
   children: React.ReactNode;
-  country: string;
+  country: string[] | string;
   close: () => void;
 }
 
 interface CountryInfo {
-  country: string;
+  country: string[] | string;
   language: string[] | string;
   continent: string;
   religion: string[] | string;

@@ -5,15 +5,9 @@ import {
   Geography,
   ZoomableGroup,
   Marker,
-  Annotation,
+  // Annotation,
 } from "react-simple-maps";
-import {
-  grayColor,
-  blueColor,
-  orangeColor,
-  greenColor,
-  yellowColor,
-} from "../../style/css/ColorLists";
+import { grayColor, greenColor } from "../../style/css/ColorLists";
 import ReactTooltip from "react-tooltip";
 import styled from "styled-components";
 import BodyStyle from "../../style/css/body.module.css";
@@ -29,13 +23,14 @@ interface MapPosition {
 }
 
 interface MapMarker {
-  name: string;
+  city: string;
+  country: string;
   coordinates: [number, number];
   markerOffset: number;
 }
 
 type Content = string;
-type Selected = string;
+type Selected = string[];
 
 const ContinentButtonGroup = styled.div`
   display: flex;
@@ -50,23 +45,36 @@ const ContinentButton = styled.button`
   border-radius: 5px;
 `;
 
+const MapText = styled.text`
+  font-family: "ubuntu";
+  font-size: 10px;
+  fill: ${grayColor[3]};
+`;
+
 const markers: Array<MapMarker> = [
   {
     markerOffset: -15,
-    name: "Seoul, Korea",
+    city: "Seoul, Korea",
+    country: "South Korea",
     coordinates: [127.024612, 37.5326],
   },
   {
     markerOffset: -15,
-    name: "Sau Paulo",
+    city: "Sau Paulo",
+    country: "Brazil",
     coordinates: [-46.330376, -23.944841],
   },
   {
     markerOffset: -15,
-    name: "Los Angeles",
+    city: "Los Angeles",
+    country: "United States",
     coordinates: [-118.243683, 34.052235],
   },
 ];
+const countriesArr: string[] = [];
+markers.map((Lists) => {
+  return countriesArr.push(Lists.country);
+});
 
 function Tworld() {
   const [content, setContent] = useState<Content>("");
@@ -74,18 +82,17 @@ function Tworld() {
     coordinates: [0, 0],
     zoom: 1,
   });
-  const [selected, setSelected] = useState<Selected>("");
+  const [selected, setSelected] = useState<Selected>([]);
   const [openModal, setOpenModal] = useState(false);
+  // function handleZoomIn() {
+  //   if (position.zoom >= 4) return;
+  //   setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
+  // }
 
-  function handleZoomIn() {
-    if (position.zoom >= 4) return;
-    setPosition((pos) => ({ ...pos, zoom: pos.zoom * 2 }));
-  }
-
-  function handleZoomOut() {
-    if (position.zoom <= 1) return;
-    setPosition((pos) => ({ ...pos, zoom: pos.zoom / 2 }));
-  }
+  // function handleZoomOut() {
+  //   if (position.zoom <= 1) return;
+  //   setPosition((pos) => ({ ...pos, zoom: pos.zoom / 2 }));
+  // }
 
   function handleMoveEnd(position: MapPosition) {
     setPosition(position);
@@ -98,9 +105,7 @@ function Tworld() {
     setOpenModal(false);
   };
 
-  useEffect(() => {
-    ReactTooltip.rebuild();
-  }, [content]);
+  useEffect(() => {}, []);
 
   return (
     <React.Fragment>
@@ -136,12 +141,15 @@ function Tworld() {
                   style={{
                     default: {
                       fill:
-                        (selected === geo.properties.name && "#F53") ||
-                        "#64829c",
+                        (selected.includes(geo.properties.name) && "#F53") ||
+                        grayColor[1],
                       outline: "none",
                     },
                     hover: {
-                      fill: "#F53",
+                      fill:
+                        (countriesArr.includes(geo.properties.name) &&
+                          "#F53") ||
+                        grayColor[2],
                       outline: "none",
                     },
                     pressed: { outline: "none" },
@@ -149,7 +157,7 @@ function Tworld() {
                   onClick={(e) => {
                     const name = geo.properties.name;
                     setSelected(name);
-                    let it = Array.from(
+                    Array.from(
                       document.getElementsByClassName(
                         name
                       ) as HTMLCollectionOf<HTMLElement>
@@ -179,15 +187,11 @@ function Tworld() {
           </Geographies>
           {markers.map((Lists) => {
             return (
-              <Marker key={Lists.name} coordinates={Lists.coordinates}>
+              <Marker key={Lists.city} coordinates={Lists.coordinates}>
                 <circle r={5} fill="#f00" stroke="#fff" strokeWidth={2} />
-                <text
-                  textAnchor="middle"
-                  y={Lists.markerOffset}
-                  style={{ fontFamily: "system-ui", fill: "#5D5A6D" }}
-                >
-                  {Lists.name}
-                </text>
+                <MapText textAnchor="middle" y={Lists.markerOffset}>
+                  {Lists.city}
+                </MapText>
               </Marker>
             );
           })}
@@ -285,6 +289,24 @@ function Tworld() {
             }}
           >
             Oceania
+          </ContinentButton>
+        </ContinentButtonGroup>
+      </div>
+
+      <div className={BodyStyle.mapBodyHeader}>
+        <ContinentButtonGroup>
+          <ContinentButton
+            type="button"
+            color={greenColor[0]}
+            onClick={() => {
+              setSelected(["South Korea", "Brazil", "United States"]);
+              setPosition({
+                coordinates: [0, 0],
+                zoom: 1,
+              });
+            }}
+          >
+            나라들
           </ContinentButton>
         </ContinentButtonGroup>
       </div>
